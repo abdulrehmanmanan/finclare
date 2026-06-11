@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LedgerAI — Your AI Accountant for UAE Property</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5EDD4;
+    --dark: #0C0C0B;
+    --dark-2: #141412;
+    --dark-3: #1E1E1B;
+    --dark-4: #2A2A26;
+    --text: #F0EDE4;
+    --text-muted: #8A8778;
+    --text-dim: #5A5950;
+    --border: rgba(201,168,76,0.15);
+    --border-strong: rgba(201,168,76,0.3);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(12,12,11,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 32px; height: 32px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: var(--dark);
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--dark) !important;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    transition: background 0.2s, transform 0.1s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold-light) !important;
+    transform: translateY(-1px);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 60%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.03;
+    background-image:
+      linear-gradient(var(--gold) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px; color: var(--gold);
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 580px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    line-height: 1.7;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .hero-form {
+    display: flex; gap: 12px;
+    max-width: 480px; margin: 0 auto 20px;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  .hero-form input {
+    flex: 1;
+    background: var(--dark-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .hero-form input::placeholder { color: var(--text-dim); }
+  .hero-form input:focus { border-color: var(--gold); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-gold:active { transform: translateY(0); }
+
+  .hero-note {
+    font-size: 13px; color: var(--text-dim);
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  .hero-note span { color: var(--gold); }
+
+  /* LOGOS */
+  .logos {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .logos-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .logos-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 48px; flex-wrap: wrap;
+  }
+
+  .logo-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* PAIN SECTION */
+  .pain {
+    padding: 100px 48px;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 520px;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .pain-card {
+    background: var(--dark-2);
+    padding: 36px 32px;
+    transition: background 0.2s;
+  }
+
+  .pain-card:hover { background: var(--dark-3); }
+
+  .pain-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pain-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .pain-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* SOLUTION */
+  .solution {
+    padding: 100px 48px;
+    background: var(--dark-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .solution-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .solution-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .feature-list {
+    display: flex; flex-direction: column; gap: 24px;
+    margin-top: 40px;
+  }
+
+  .feature-item {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+
+  .feature-check {
+    width: 24px; height: 24px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  .feature-item h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .feature-item p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* MOCK SCREEN */
+  .mock-screen {
+    background: var(--dark-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .mock-bar {
+    background: var(--dark-4);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .mock-body { padding: 24px; }
+
+  .mock-stat-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .mock-stat {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .mock-stat-label { font-size: 10px; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .mock-stat-val { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
+  .mock-stat-sub { font-size: 10px; color: var(--gold); margin-top: 3px; }
+
+  .mock-alert {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+
+  .mock-alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .mock-alert-title { font-size: 12px; font-weight: 600; color: var(--text); font-family: 'Syne', sans-serif; }
+  .mock-alert-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 100px 48px;
+    max-width: 1100px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 60px;
+    text-align: left;
+  }
+
+  .step {
+    background: var(--dark-2);
+    padding: 36px 28px;
+  }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px; font-weight: 800;
+    color: var(--border-strong);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .step p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* PRICING */
+  .pricing {
+    padding: 100px 48px;
+    background: var(--dark-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-inner {
+    max-width: 900px; margin: 0 auto; text-align: center;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 60px;
+    text-align: left;
+  }
+
+  .price-card {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .price-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+
+  .price-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--dark-3) 0%, rgba(201,168,76,0.05) 100%);
+    position: relative;
+  }
+
+  .price-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 11px; font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    padding: 4px 14px;
+    border-radius: 100px;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  .price-plan {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .price-amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 40px; font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .price-amount span { font-size: 18px; font-weight: 400; color: var(--text-muted); }
+
+  .price-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+  .price-features li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; color: var(--text-muted);
+  }
+
+  .price-features li::before {
+    content: '✓';
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .btn-outline {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px; font-weight: 500;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+
+  .price-card.featured .btn-outline {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--dark);
+  }
+
+  .price-card.featured .btn-outline:hover { background: var(--gold-light); }
+
+  /* TESTIMONIAL */
+  .testimonials {
+    padding: 100px 48px;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 60px;
+  }
+
+  .testimonial-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+
+  .testimonial-card:hover { border-color: var(--border-strong); }
+
+  .testimonial-stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+
+  .testimonial-text {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .testimonial-author {
+    display: flex; gap: 12px; align-items: center;
+  }
+
+  .author-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--dark-4);
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--gold);
+  }
+
+  .author-name { font-size: 14px; font-weight: 500; color: var(--text); font-family: 'Syne', sans-serif; }
+  .author-title { font-size: 12px; color: var(--text-dim); }
+
+  /* CTA */
+  .cta-section {
+    padding: 100px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+
+  .cta-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+
+  .cta-inner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .cta-inner p { font-size: 17px; color: var(--text-muted); margin-bottom: 40px; font-weight: 300; }
+
+  .cta-form {
+    display: flex; gap: 12px;
+    max-width: 440px; margin: 0 auto 16px;
+  }
+
+  .cta-form input {
+    flex: 1;
+    background: var(--dark-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .cta-form input:focus { border-color: var(--gold); }
+  .cta-form input::placeholder { color: var(--text-dim); }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .footer-links { display: flex; gap: 24px; }
+
+  .footer-links a {
+    font-size: 13px; color: var(--text-dim);
+    text-decoration: none; transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text-muted); }
+
+  .footer-copy { font-size: 13px; color: var(--text-dim); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--gold);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-form, .cta-form { flex-direction: column; }
+    .pain, .how, .testimonials, .cta-section { padding: 60px 24px; }
+    .solution { padding: 60px 24px; }
+    .solution-split { grid-template-columns: 1fr; gap: 40px; }
+    .pricing { padding: 60px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    .logos { padding: 32px 24px; }
+    .logos-row { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">L</div>
+    LedgerAI
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#solution">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#waitlist" class="nav-cta">Join Waitlist</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Built for UAE Property Investors
+    </div>
+    <h1>Your property finances.<br><em>Finally under control.</em></h1>
+    <p class="hero-sub">LedgerAI is the AI accountant built specifically for UAE landlords and foreign property investors. Know exactly what you owe, what you can deduct, and how your investment is performing — in real time.</p>
+    <form class="hero-form" onsubmit="handleSubmit(event, 'hero-success')">
+      <input type="email" id="hero-email" placeholder="Enter your email address" required />
+      <button type="submit" class="btn-gold">Join Waitlist</button>
+    </form>
+    <div class="success-msg" id="hero-success">✓ You're on the list. We'll be in touch soon.</div>
+    <p class="hero-note">Free during beta · <span>No credit card required</span> · Launching in Dubai Q3 2026</p>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos">
+  <p class="logos-label">Trusted by property investors from</p>
+  <div class="logos-row">
+    <span class="logo-item">🇮🇳 India</span>
+    <span class="logo-item">🇬🇧 United Kingdom</span>
+    <span class="logo-item">🇷🇺 Russia</span>
+    <span class="logo-item">🇵🇰 Pakistan</span>
+    <span class="logo-item">🇨🇳 China</span>
+    <span class="logo-item">🇩🇪 Germany</span>
+  </div>
+</div>
+
+<!-- PAIN SECTION -->
+<section class="pain" id="problem">
+  <div class="reveal">
+    <p class="section-label">The Problem</p>
+    <h2 class="section-title">UAE property tax is confusing.<br>Your accountant is expensive.</h2>
+    <p class="section-sub">Most property investors in Dubai are either overpaying accountants or flying blind on their tax obligations. Neither is acceptable.</p>
+  </div>
+  <div class="pain-grid reveal">
+    <div class="pain-card">
+      <div class="pain-icon">😰</div>
+      <h3>Tax confusion nobody explains</h3>
+      <p>Corporate tax, VAT on commercial units, residential exemptions — the rules changed in 2023 and most investors still don't know if they owe anything or not.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h3>Accountants charging AED 8,000+/year</h3>
+      <p>For a simple rental property portfolio, you're paying premium prices for work that should take minutes. That's money coming directly out of your yield.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📊</div>
+      <h3>Zero real-time visibility</h3>
+      <p>You get a monthly Excel from your property manager that tells you what already happened. No alerts. No insights. No action items. Just a spreadsheet.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🌍</div>
+      <h3>Managing from abroad is a nightmare</h3>
+      <p>If you're an overseas investor, you're navigating UAE regulations from another country, in another timezone, often in another language. The system isn't built for you.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔍</div>
+      <h3>Missing thousands in deductions</h3>
+      <p>Management fees, maintenance costs, service charges — most investors aren't claiming everything they're entitled to. The missed savings add up fast.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⚠️</div>
+      <h3>Penalty risk from FTA</h3>
+      <p>The Federal Tax Authority is getting more sophisticated every year. One misclassified property or missed VAT registration can cost you tens of thousands in penalties.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="solution-inner">
+    <div class="solution-split">
+      <div class="reveal">
+        <p class="section-label">The Solution</p>
+        <h2 class="section-title">An AI accountant that actually understands UAE property.</h2>
+        <p class="section-sub">Not generic accounting software. A system built from the ground up for how UAE property investment actually works.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <div>
+              <h4>UAE-specific tax intelligence</h4>
+              <p>Knows the difference between residential and commercial VAT, corporate tax thresholds, and FTA filing requirements. Built for UAE, not adapted from elsewhere.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <div>
+              <h4>Real-time portfolio dashboard</h4>
+              <p>Connect your properties and see income, expenses, yield, and tax liability updating live — not at month end.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <div>
+              <h4>Proactive alerts before problems hit</h4>
+              <p>Tax due in 14 days. Missing deduction worth AED 3,200. VAT registration threshold approaching. We tell you before it costs you.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <div>
+              <h4>Ask anything in plain English</h4>
+              <p>"Am I liable for corporate tax?" "What can I deduct this quarter?" "How do I classify my Airbnb income?" Instant answers, no jargon.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="mock-screen">
+          <div class="mock-bar">
+            <div class="mock-dot" style="background:#FF5F57"></div>
+            <div class="mock-dot" style="background:#FFBD2E"></div>
+            <div class="mock-dot" style="background:#28CA41"></div>
+            <span style="font-size:12px; color:#5A5950; margin-left:8px;">LedgerAI Dashboard</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-stat-row">
+              <div class="mock-stat">
+                <div class="mock-stat-label">Monthly income</div>
+                <div class="mock-stat-val">AED 18,400</div>
+                <div class="mock-stat-sub">↑ 8% vs last month</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-label">Net yield</div>
+                <div class="mock-stat-val">7.2%</div>
+                <div class="mock-stat-sub">Above market avg</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-label">Tax estimate</div>
+                <div class="mock-stat-val">AED 0</div>
+                <div class="mock-stat-sub" style="color:#8A8778">Exempt — personal</div>
+              </div>
+            </div>
+            <div class="mock-alert">
+              <div class="mock-alert-icon">⚡</div>
+              <div>
+                <div class="mock-alert-title">AED 4,200 in unclaimed deductions found</div>
+                <div class="mock-alert-desc">Service charges, management fees, and maintenance costs across 3 properties are deductible. Tap to review.</div>
+              </div>
+            </div>
+            <div class="mock-alert">
+              <div class="mock-alert-icon">📋</div>
+              <div>
+                <div class="mock-alert-title">Q2 owner report ready — 1 tap to send</div>
+                <div class="mock-alert-desc">Professional PDF generated. Income, expenses, yield per property. Ready for your records or bank submission.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="reveal">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">Set up in under 5 minutes.</h2>
+    <p class="section-sub" style="margin: 0 auto 0;">No accountant needed. No training required. No jargon.</p>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Connect your properties</h3>
+      <p>Add your properties, link your bank account or upload statements. Takes 3 minutes. We handle the rest.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>AI reads everything</h3>
+      <p>We automatically categorize income and expenses, identify deductions, and calculate your UAE tax position.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Get instant clarity</h3>
+      <p>Your dashboard shows exactly what you earn, owe, and can save — updated in real time, explained in plain English.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Stay ahead automatically</h3>
+      <p>Alerts before tax deadlines. Reports generated on demand. Compliance maintained without you thinking about it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-inner">
+    <div class="reveal">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title">Less than one hour of accountant fees.<br>Every single month.</h2>
+      <p class="section-sub" style="margin: 0 auto;">No hidden fees. Cancel anytime. Free during beta.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-plan">Starter</div>
+        <div class="price-amount">AED 149<span>/mo</span></div>
+        <div class="price-desc">For investors with 1–2 properties</div>
+        <ul class="price-features">
+          <li>Up to 2 properties</li>
+          <li>Tax liability calculator</li>
+          <li>Basic deductions tracker</li>
+          <li>Monthly financial summary</li>
+          <li>AI chat — 20 questions/month</li>
+        </ul>
+        <button class="btn-outline" onclick="scrollToWaitlist()">Join Waitlist</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">MOST POPULAR</div>
+        <div class="price-plan">Pro</div>
+        <div class="price-amount">AED 299<span>/mo</span></div>
+        <div class="price-desc">For serious investors with multiple properties</div>
+        <ul class="price-features">
+          <li>Up to 10 properties</li>
+          <li>Full UAE tax compliance</li>
+          <li>VAT tracking and alerts</li>
+          <li>Real-time portfolio dashboard</li>
+          <li>Investor reports — 1 tap</li>
+          <li>Unlimited AI chat</li>
+          <li>FTA deadline alerts</li>
+        </ul>
+        <button class="btn-outline" onclick="scrollToWaitlist()">Join Waitlist</button>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">Portfolio</div>
+        <div class="price-amount">AED 599<span>/mo</span></div>
+        <div class="price-desc">For high-volume investors and family offices</div>
+        <ul class="price-features">
+          <li>Unlimited properties</li>
+          <li>Multi-currency reporting</li>
+          <li>Corporate structure support</li>
+          <li>Priority support</li>
+          <li>Custom reports</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <button class="btn-outline" onclick="scrollToWaitlist()">Join Waitlist</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="reveal" style="text-align:center">
+    <p class="section-label">Early Feedback</p>
+    <h2 class="section-title">What early users are saying.</h2>
+  </div>
+  <div class="testimonial-grid reveal">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I own 3 apartments in Dubai from London and was paying AED 7,500 a year to an accountant who sent me a spreadsheet twice a year. LedgerAI gives me more clarity in a day than I got in a year."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RK</div>
+        <div>
+          <div class="author-name">Rahul K.</div>
+          <div class="author-title">Property investor — London / Dubai</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Finally something that understands UAE tax rules. I had no idea my commercial unit had different VAT treatment than my apartments. This saved me from a compliance issue."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SH</div>
+        <div>
+          <div class="author-name">Sarah H.</div>
+          <div class="author-title">Landlord — Dubai Marina</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The deductions alert alone paid for 6 months of subscription in the first week. I was missing AED 11,000 in legitimate deductions across my portfolio."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">AJ</div>
+        <div>
+          <div class="author-name">Ahmed J.</div>
+          <div class="author-title">Real estate investor — Abu Dhabi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <div class="cta-bg"></div>
+  <div class="cta-inner reveal">
+    <h2>Stop guessing.<br><em style="color:var(--gold); font-style:normal">Start knowing.</em></h2>
+    <p>Join the waitlist. Free during beta. Be the first to get access when we launch in Dubai Q3 2026.</p>
+    <form class="cta-form" onsubmit="handleSubmit(event, 'cta-success')">
+      <input type="email" id="cta-email" placeholder="Your email address" required />
+      <button type="submit" class="btn-gold">Get Early Access</button>
+    </form>
+    <div class="success-msg" id="cta-success">✓ You're on the list. We'll reach out before launch.</div>
+    <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">No spam. No credit card. Just early access.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">LedgerAI</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 LedgerAI. Built for UAE property investors.</div>
+</footer>
+
+<script>
+function handleSubmit(e, successId) {
+  e.preventDefault();
+  const success = document.getElementById(successId);
+  success.style.display = 'block';
+  e.target.style.display = 'none';
+}
+
+function scrollToWaitlist() {
+  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+}
+
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
