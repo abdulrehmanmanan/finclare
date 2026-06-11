@@ -755,8 +755,8 @@
     </div>
     <h1>Your property finances.<br><em>Finally under control.</em></h1>
     <p class="hero-sub">LedgerAI is the AI accountant built specifically for UAE landlords and foreign property investors. Know exactly what you owe, what you can deduct, and how your investment is performing — in real time.</p>
-    <form class="hero-form" onsubmit="handleSubmit(event, 'hero-success')">
-      <input type="email" id="hero-email" placeholder="Enter your email address" required />
+    <form class="hero-form" action="https://app.us17.list-manage.com/subscribe/post?u=90b0e27c056bbeab4c6e38c09&id=b4d3b38a82&f_id=00d80fe0f0" method="post" target="_blank" onsubmit="showSuccess('hero-success')">
+      <input type="email" name="EMAIL" id="hero-email" placeholder="Enter your email address" required />
       <button type="submit" class="btn-gold">Join Waitlist</button>
     </form>
     <div class="success-msg" id="hero-success">✓ You're on the list. We'll be in touch soon.</div>
@@ -1040,8 +1040,8 @@
   <div class="cta-inner reveal">
     <h2>Stop guessing.<br><em style="color:var(--gold); font-style:normal">Start knowing.</em></h2>
     <p>Join the waitlist. Free during beta. Be the first to get access when we launch in Dubai Q3 2026.</p>
-    <form class="cta-form" onsubmit="handleSubmit(event, 'cta-success')">
-      <input type="email" id="cta-email" placeholder="Your email address" required />
+    <form class="cta-form" action="https://app.us17.list-manage.com/subscribe/post?u=90b0e27c056bbeab4c6e38c09&id=b4d3b38a82&f_id=00d80fe0f0" method="post" target="_blank" onsubmit="showSuccess('cta-success')">
+      <input type="email" name="EMAIL" id="cta-email" placeholder="Your email address" required />
       <button type="submit" class="btn-gold">Get Early Access</button>
     </form>
     <div class="success-msg" id="cta-success">✓ You're on the list. We'll reach out before launch.</div>
@@ -1060,11 +1060,11 @@
 </footer>
 
 <script>
-function handleSubmit(e, successId) {
-  e.preventDefault();
-  const success = document.getElementById(successId);
-  success.style.display = 'block';
-  e.target.style.display = 'none';
+function showSuccess(successId) {
+  setTimeout(() => {
+    const success = document.getElementById(successId);
+    if(success) success.style.display = 'block';
+  }, 800);
 }
 
 function scrollToWaitlist() {
