@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LedgerAI — UAE Property Tax Calculator</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NLMZJB0H5C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NLMZJB0H5C');
+
+  // Track calculator steps
+  function trackEvent(action, category, label) {
+    gtag('event', action, {
+      'event_category': category,
+      'event_label': label
+    });
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -412,10 +428,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px;
 
         <div class="email-wrap" id="emailWrap" style="display:none">
           <div class="email-label">Enter your email to get access</div>
-          <div class="email-row">
-            <input type="email" class="email-input" placeholder="your@email.com" id="userEmail"/>
-            <button class="btn-sm" onclick="submitEmail()">Get Access</button>
-          </div>
+          <form action="https://app.us17.list-manage.com/subscribe/post?u=90b0e27c056bbeab4c6e38c09&id=b4d3b38a82&f_id=00d80fe0f0" method="post" target="_blank" onsubmit="submitEmail()" style="display:flex;gap:8px;">
+            <input type="email" name="EMAIL" class="email-input" placeholder="your@email.com" id="userEmail" required/>
+            <button type="submit" class="btn-sm">Get Access</button>
+          </form>
           <div class="success-note" id="successNote">✓ You're in the beta. We'll reach out personally before launch. Welcome to LedgerAI.</div>
         </div>
 
@@ -428,7 +444,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px;
 <script>
 const state = { q1: null, q2: null, q3: null, income: 375000, q5: null };
 
-function startCalc() { showScreen('screen-q1'); setProgress(0); }
+function startCalc() { showScreen('screen-q1'); setProgress(0); trackEvent('calculator_started', 'MVP', 'Start Button Clicked'); }
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function setProgress(p) { document.getElementById('progressFill').style.width = p + '%'; }
 
@@ -454,7 +470,7 @@ function updateSlider(val) {
 
 function runCalculation() { setTimeout(() => { buildResults(); showScreen('screen-results'); }, 3400); }
 
-function buildResults() {
+function buildResults() { trackEvent('results_viewed', 'MVP', 'Calculator Completed');
   const { q1, q2, q3, income, q5 } = state;
   const statuses = [], actions = [];
   let totalLoss = 0, lossBreakdown = [], summary = '';
@@ -569,17 +585,23 @@ function buildResults() {
   document.getElementById('aiResponse').textContent = `Based on your profile — ${propCount} ${q2} ${q3 === 'personal' ? 'personal' : 'company-owned'} properties with AED ${income.toLocaleString()} income — I've identified AED ${baseDedMissed.toLocaleString()} in unclaimed deductions. Your biggest opportunity is management fee deductions. Want me to walk you through exactly how to claim them?`;
 }
 
-function showEmailForm() {
+function showEmailForm() { trackEvent('email_form_opened', 'MVP', 'Unlock Button Clicked');
   const wrap = document.getElementById('emailWrap');
   wrap.style.display = 'block';
   wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-function submitEmail() {
+function submitEmail() { trackEvent('email_submitted', 'MVP', 'Email Captured');
   const email = document.getElementById('userEmail').value;
-  if (!email || !email.includes('@')) { document.getElementById('userEmail').style.borderColor = 'var(--red)'; return; }
-  document.getElementById('emailWrap').querySelector('.email-row').style.display = 'none';
-  document.getElementById('successNote').style.display = 'block';
+  if (!email || !email.includes('@')) { 
+    document.getElementById('userEmail').style.borderColor = 'var(--red)'; 
+    return false; 
+  }
+  setTimeout(() => {
+    document.getElementById('emailWrap').querySelector('form').style.display = 'none';
+    document.getElementById('successNote').style.display = 'block';
+  }, 800);
+  return true;
 }
 </script>
 </body>
