@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finclare: Find Your Leak</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NLMZJB0H5C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NLMZJB0H5C');
+  function trackEvent(action, category, label) { gtag('event', action, {'event_category': category, 'event_label': label}); }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --void: #07080B; --carbon: #0D0F14; --graphite: #14171F; --graphite-2: #1A1E29;
+  --steel: #262B38; --steel-light: #343B4D;
+  --sapphire: #3D7FFF; --sapphire-bright: #6BA0FF; --sapphire-dim: rgba(61,127,255,0.12); --sapphire-glow: rgba(61,127,255,0.4);
+  --text: #F1F2F6; --text-mid: #9CA2B5; --text-dim: #565D72;
+  --profit: #2ECC8E; --profit-bg: rgba(46,204,142,0.1); --profit-border: rgba(46,204,142,0.28);
+  --loss: #FF5C72; --loss-bg: rgba(255,92,114,0.1); --loss-border: rgba(255,92,114,0.28);
+  --warn: #FFC95C; --warn-bg: rgba(255,201,92,0.1); --warn-border: rgba(255,201,92,0.28);
+  --mono: 'IBM Plex Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--void); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; overflow-x: hidden; }
+.mono { font-family: var(--mono); }
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 75% 50% at 50% -10%, rgba(61,127,255,0.11) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 90% 75%, rgba(255,92,114,0.03) 0%, transparent 55%); }
+.app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 0 20px 60px; }
+.nav { width: 100%; max-width: 640px; padding: 24px 0 0; display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; }
+.nav-brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; color: var(--text); }
+.nav-brand a { color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.nav-mark { width: 26px; height: 26px; background: linear-gradient(135deg, var(--sapphire), var(--sapphire-bright)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--void); box-shadow: 0 0 16px var(--sapphire-glow); }
+.nav-tag { font-family: var(--mono); font-size: 11px; color: var(--text-dim); border: 1px solid var(--steel); border-radius: 100px; padding: 5px 14px; }
+
+.card { width: 100%; max-width: 620px; background: linear-gradient(165deg, var(--graphite), var(--carbon)); border: 1px solid var(--steel); border-radius: 18px; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.6); animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) both; position: relative; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--sapphire-bright), transparent); opacity: 0.5; z-index: 2; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.progress-bar { height: 3px; background: rgba(255,255,255,0.06); position: relative; z-index: 1; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--sapphire), var(--sapphire-bright)); box-shadow: 0 0 12px var(--sapphire-glow); transition: width 0.6s cubic-bezier(0.16,1,0.3,1); }
+.screen { display: none; }
+.screen.active { display: block; animation: screenIn 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes screenIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
+
+.intro { padding: 52px 48px; text-align: center; }
+.intro-icon { width: 58px; height: 58px; background: linear-gradient(135deg, var(--sapphire), var(--sapphire-bright)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: white; margin: 0 auto 28px; box-shadow: 0 0 36px var(--sapphire-glow); animation: iconPulse 2.4s ease-in-out infinite; }
+@keyframes iconPulse { 0%,100% { box-shadow: 0 0 36px var(--sapphire-glow); } 50% { box-shadow: 0 0 52px var(--sapphire-glow); } }
+.intro h1 { font-size: 27px; font-weight: 800; line-height: 1.25; margin-bottom: 14px; letter-spacing: -0.01em; }
+.intro h1 .grad { background: linear-gradient(120deg, var(--sapphire-bright), var(--sapphire)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.intro p { font-size: 15px; color: var(--text-mid); line-height: 1.7; margin-bottom: 24px; max-width: 420px; margin-left: auto; margin-right: auto; }
+.social-proof { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 26px; font-size: 12px; color: var(--text-dim); }
+.sp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--profit); box-shadow: 0 0 8px var(--profit); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.sp-text strong { color: var(--sapphire-bright); }
+.pill-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 30px; }
+.pill { font-family: var(--mono); font-size: 11px; color: var(--text-mid); background: rgba(255,255,255,0.04); border: 1px solid var(--steel); border-radius: 100px; padding: 6px 14px; }
+.btn-primary { width: 100%; background: var(--sapphire); color: white; border: none; border-radius: 10px; padding: 16px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 0 0 0 var(--sapphire-glow); }
+.btn-primary:hover { background: var(--sapphire-bright); transform: translateY(-2px); box-shadow: 0 8px 28px -4px var(--sapphire-glow); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.trust-row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+.trust-item { font-size: 11px; color: var(--text-dim); }
+
+.question-wrap { padding: 40px 48px; }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.q-step { font-family: var(--mono); font-size: 11px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+.q-back { font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer; padding: 0; }
+.q-back:hover { color: var(--text-mid); }
+.q-hook { font-family: var(--mono); font-size: 11.5px; color: var(--loss); margin-bottom: 14px; padding: 8px 12px; background: var(--loss-bg); border: 1px solid var(--loss-border); border-radius: 8px; display: inline-block; }
+.q-hook.warn { color: var(--warn); background: var(--warn-bg); border-color: var(--warn-border); }
+.q-hook.sapphire { color: var(--sapphire-bright); background: var(--sapphire-dim); border-color: rgba(61,127,255,0.25); }
+.q-title { font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 8px; letter-spacing: -0.01em; }
+.q-sub { font-size: 14px; color: var(--text-mid); margin-bottom: 26px; line-height: 1.65; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option { background: rgba(255,255,255,0.02); border: 1px solid var(--steel); border-radius: 10px; padding: 16px 20px; cursor: pointer; transition: all 0.2s cubic-bezier(0.2,0.8,0.2,1); display: flex; align-items: center; gap: 14px; text-align: left; }
+.option:hover { border-color: var(--sapphire); background: var(--sapphire-dim); transform: translateX(3px); }
+.option.selected { border-color: var(--sapphire); background: var(--sapphire-dim); box-shadow: 0 0 0 1px var(--sapphire) inset; }
+.option-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.04); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.option.selected .option-icon { background: rgba(61,127,255,0.18); }
+.option-label { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.option-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+
+/* PROPERTY COUNT — FREE INPUT */
+.count-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; margin: 30px 0 10px; }
+.count-control { display: flex; align-items: center; gap: 24px; }
+.count-btn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid var(--steel); color: var(--text); font-size: 22px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; user-select: none; }
+.count-btn:hover { border-color: var(--sapphire); background: var(--sapphire-dim); color: var(--sapphire-bright); }
+.count-btn:active { transform: scale(0.93); }
+.count-display { text-align: center; min-width: 100px; }
+.count-num { font-family: var(--mono); font-size: 48px; font-weight: 700; color: var(--sapphire-bright); line-height: 1; }
+.count-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+.count-or { font-size: 12px; color: var(--text-dim); text-align: center; }
+.count-manual { display: flex; align-items: center; gap: 10px; justify-content: center; }
+.count-manual input { width: 90px; text-align: center; background: rgba(255,255,255,0.03); border: 1px solid var(--steel); border-radius: 8px; padding: 10px; font-family: var(--mono); font-size: 16px; color: var(--text); outline: none; }
+.count-manual input:focus { border-color: var(--sapphire); }
+.count-manual label { font-size: 13px; color: var(--text-dim); }
+
+.slider-wrap { margin: 26px 0; }
+.slider-display { text-align: center; margin-bottom: 18px; }
+.slider-val { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--sapphire-bright); }
+.slider-unit { font-size: 15px; color: var(--text-dim); margin-left: 4px; }
+.threshold-warn { display: none; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--warn); margin-top: 12px; text-align: center; }
+input[type=range] { width: 100%; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--steel); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--sapphire-bright); border: 3px solid var(--carbon); box-shadow: 0 0 12px var(--sapphire-glow); cursor: pointer; }
+.slider-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-dim); margin-top: 10px; }
+
+.calculating { padding: 60px 48px; text-align: center; }
+.calc-anim { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--steel); border-top-color: var(--sapphire-bright); animation: spin 0.9s linear infinite; margin: 0 auto 26px; box-shadow: 0 0 24px var(--sapphire-glow); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.calc-title { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+.calc-sub { font-size: 14px; color: var(--text-dim); }
+.calc-steps { margin-top: 30px; display: flex; flex-direction: column; gap: 9px; text-align: left; }
+.calc-step { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--text-mid); padding: 10px 16px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid var(--steel); opacity: 0; animation: fadeIn 0.4s ease forwards; }
+.calc-step:nth-child(1) { animation-delay: 0.3s; } .calc-step:nth-child(2) { animation-delay: 0.9s; }
+.calc-step:nth-child(3) { animation-delay: 1.5s; } .calc-step:nth-child(4) { animation-delay: 2.1s; } .calc-step:nth-child(5) { animation-delay: 2.7s; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+.results { padding: 36px 48px; }
+.results-header { text-align: center; padding-bottom: 26px; border-bottom: 1px solid var(--steel); margin-bottom: 26px; }
+.results-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--profit-bg); border: 1px solid var(--profit-border); border-radius: 100px; padding: 6px 16px; font-family: var(--mono); font-size: 11px; color: var(--profit); font-weight: 600; margin-bottom: 16px; }
+.results-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.results-sub { font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+
+.money-loss-box { background: var(--carbon); border: 1px solid var(--loss-border); border-radius: 14px; padding: 26px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.money-loss-box::before { content: ''; position: absolute; top: -40%; right: -10%; width: 240px; height: 240px; background: radial-gradient(circle, var(--loss-bg) 0%, transparent 70%); pointer-events: none; }
+.ml-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; position: relative; z-index: 1; }
+.ml-amount { font-family: var(--mono); font-size: 40px; font-weight: 700; color: var(--loss); margin-bottom: 4px; position: relative; z-index: 1; }
+.ml-monthly { font-size: 13px; color: var(--text-mid); margin-bottom: 16px; position: relative; z-index: 1; }
+.ml-breakdown { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 1; }
+.ml-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.ml-row span:first-child { color: var(--text-mid); }
+.ml-row span:last-child { font-family: var(--mono); color: var(--loss); font-weight: 600; }
+
+.status-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.status-card { border-radius: 10px; padding: 16px 18px; display: flex; align-items: flex-start; gap: 14px; border: 1px solid; }
+.status-card.safe { background: var(--profit-bg); border-color: var(--profit-border); }
+.status-card.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+.status-card.alert { background: var(--loss-bg); border-color: var(--loss-border); }
+.status-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; background: rgba(255,255,255,0.04); }
+.status-label { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.safe .status-label { color: var(--profit); } .warn .status-label { color: var(--warn); } .alert .status-label { color: var(--loss); }
+.status-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.status-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+.section-title { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+.action-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.action-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--steel); border-radius: 8px; font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+.action-num { width: 18px; height: 18px; background: var(--sapphire-dim); color: var(--sapphire-bright); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+.chat-teaser { background: rgba(255,255,255,0.02); border: 1px solid var(--steel); border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; }
+.ct-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.ct-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--profit); box-shadow: 0 0 8px var(--profit); }
+.ct-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.ct-locked { font-family: var(--mono); font-size: 10px; color: var(--sapphire-bright); background: var(--sapphire-dim); border: 1px solid rgba(61,127,255,0.25); border-radius: 100px; padding: 2px 8px; margin-left: auto; }
+.chat-bubble { background: rgba(255,255,255,0.03); border: 1px solid var(--steel); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; }
+.chat-bubble.ai { margin-top: 14px; filter: blur(2.5px); pointer-events: none; user-select: none; }
+.chat-unlock { font-size: 12px; color: var(--sapphire-bright); text-align: center; margin-top: 8px; cursor: pointer; font-weight: 600; }
+
+.divider { height: 1px; background: var(--steel); margin: 24px 0; }
+.dashboard-preview { border: 1px solid var(--steel); border-radius: 12px; overflow: hidden; margin-bottom: 20px; position: relative; }
+.preview-header { background: var(--carbon); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--steel); }
+.preview-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.preview-tag { font-family: var(--mono); font-size: 10px; color: var(--void); background: var(--sapphire-bright); border-radius: 100px; padding: 3px 10px; font-weight: 700; }
+.preview-body { padding: 16px 18px; background: var(--graphite); filter: blur(3px); pointer-events: none; user-select: none; }
+.preview-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.preview-stat { background: rgba(255,255,255,0.03); border: 1px solid var(--steel); border-radius: 6px; padding: 10px 12px; }
+.ps-label { font-family: var(--mono); font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.ps-val { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--text); }
+.ps-sub { font-size: 9px; color: var(--profit); margin-top: 2px; }
+.preview-row { background: rgba(255,255,255,0.03); border: 1px solid var(--steel); border-radius: 6px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+.pr-label { font-size: 11px; color: var(--text-mid); }
+.pr-val { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--sapphire-bright); }
+.preview-overlay { position: absolute; inset: 0; top: 48px; background: linear-gradient(to bottom, transparent 15%, rgba(7,8,11,0.97) 60%); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 20px; text-align: center; }
+.overlay-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+.overlay-sub { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+.upgrade-box { background: linear-gradient(165deg, rgba(61,127,255,0.08), var(--carbon)); border: 1px solid rgba(61,127,255,0.25); border-radius: 14px; padding: 28px; text-align: center; }
+.upgrade-saving { font-family: var(--mono); font-size: 11px; color: var(--profit); background: var(--profit-bg); border: 1px solid var(--profit-border); border-radius: 100px; padding: 5px 14px; display: inline-block; margin-bottom: 16px; }
+.upgrade-price { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.upgrade-price span { font-size: 14px; font-weight: 400; color: var(--text-dim); }
+.upgrade-vs { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; text-decoration: line-through; }
+.upgrade-desc { font-size: 13px; color: var(--text-mid); margin-bottom: 18px; line-height: 1.6; }
+.upgrade-features { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
+.uf { font-family: var(--mono); font-size: 10px; color: var(--text-mid); background: rgba(255,255,255,0.04); border: 1px solid var(--steel); border-radius: 100px; padding: 4px 12px; }
+.btn-light { width: 100%; background: var(--sapphire); color: white; border: none; border-radius: 10px; padding: 15px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 0 0 0 var(--sapphire-glow); }
+.btn-light:hover { background: var(--sapphire-bright); box-shadow: 0 8px 28px -4px var(--sapphire-glow); transform: translateY(-2px); }
+.btn-secondary { width: 100%; background: transparent; border: 1px solid var(--steel); color: var(--text-mid); border-radius: 10px; padding: 13px; font-size: 13px; cursor: pointer; margin-top: 10px; transition: border-color 0.2s, color 0.2s; }
+.btn-secondary:hover { border-color: var(--sapphire); color: var(--text); }
+
+.email-wrap { margin-top: 20px; }
+.email-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-bottom: 10px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.email-row { display: flex; gap: 8px; }
+.email-input { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--steel); border-radius: 8px; padding: 12px 16px; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; }
+.email-input:focus { border-color: var(--sapphire); }
+.btn-sm { background: var(--sapphire); color: white; border: none; border-radius: 8px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-sm:hover { background: var(--sapphire-bright); }
+.success-note { display: none; text-align: center; font-size: 13px; color: var(--profit); padding: 12px; background: var(--profit-bg); border: 1px solid var(--profit-border); border-radius: 8px; margin-top: 10px; }
+.footer-note { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 20px; line-height: 1.6; }
+
+@media (max-width: 580px) {
+  .intro, .question-wrap, .results { padding: 28px 24px; }
+  .calculating { padding: 48px 24px; }
+  .intro h1 { font-size: 22px; } .q-title { font-size: 19px; }
+  .email-row { flex-direction: column; } .ml-amount { font-size: 30px; }
+  .count-control { gap: 16px; } .count-btn { width: 46px; height: 46px; }
+}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="app">
+  <div class="nav">
+    <div class="nav-brand"><a href="index.html"><div class="nav-mark">F</div>Finclare</a></div>
+    <div class="nav-tag">FIND YOUR LEAK</div>
+  </div>
+
+  <div class="card">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+    <div class="screen active" id="screen-intro">
+      <div class="intro">
+        <div class="intro-icon">F</div>
+        <h1>Where exactly is the<br><span class="grad">money leaking out?</span></h1>
+        <p>Six honest questions. A real answer about what you owe, what you're missing, and what to do next. Built for current UAE tax law.</p>
+        <div class="social-proof"><div class="sp-dot"></div><div class="sp-text"><strong>2,400+ investors</strong> have found their number this month</div></div>
+        <div class="pill-row">
+          <div class="pill">CORPORATE TAX</div><div class="pill">VAT</div><div class="pill">DEDUCTIONS</div><div class="pill">FTA STATUS</div>
+        </div>
+        <button class="btn-primary" onclick="startCalc()">Find My Leak, Free</button>
+        <div class="trust-row">
+          <div class="trust-item">No account needed</div><div class="trust-item">2 minutes</div><div class="trust-item">Built for UAE law</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q1: PROPERTY COUNT — FREE INPUT, NOT BUCKETS -->
+    <div class="screen" id="screen-q1">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 1 / 6</span><button class="q-back" onclick="goBack('screen-intro',0)">← Back</button></div>
+        <div class="q-hook sapphire">Most investors have lost count of their own exposure.</div>
+        <div class="q-title">How many properties do you actually own in UAE?</div>
+        <div class="q-sub">Use the exact number. Apartments, villas, commercial units, everything. Tap + or − to adjust, or type it directly.</div>
+
+        <div class="count-wrap">
+          <div class="count-control">
+            <div class="count-btn" onclick="adjustCount(-1)">−</div>
+            <div class="count-display"><div class="count-num" id="countNum">1</div><div class="count-label" id="countLabel">property</div></div>
+            <div class="count-btn" onclick="adjustCount(1)">+</div>
+          </div>
+          <div class="count-or">or type the exact number</div>
+          <div class="count-manual">
+            <input type="number" id="countManual" min="1" max="500" value="1" oninput="setCountManual(this.value)">
+            <label>properties</label>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="confirmCount()" style="margin-top:10px;">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Q2: PROPERTY TYPE -->
+    <div class="screen" id="screen-q2">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 2 / 6</span><button class="q-back" onclick="goBack('screen-q1',16)">← Back</button></div>
+        <div class="q-hook warn">This single answer decides whether VAT applies to you at all.</div>
+        <div class="q-title">What type of properties are these?</div>
+        <div class="q-sub">Residential and commercial are treated completely differently under UAE VAT law.</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this,'q2','residential','screen-q3',33)"><div class="option-icon">🛏️</div><div><div class="option-label">Residential only</div><div class="option-desc">Apartments, villas, townhouses for living</div></div></div>
+          <div class="option" onclick="selectOption(this,'q2','commercial','screen-q3',33)"><div class="option-icon">🏪</div><div><div class="option-label">Commercial only</div><div class="option-desc">Offices, shops, warehouses, retail</div></div></div>
+          <div class="option" onclick="selectOption(this,'q2','mixed','screen-q3',33)"><div class="option-icon">🏗️</div><div><div class="option-label">Mixed: residential & commercial</div><div class="option-desc">Combination of both types</div></div></div>
+          <div class="option" onclick="selectOption(this,'q2','shortterm','screen-q3',33)"><div class="option-icon">📱</div><div><div class="option-label">Short-term / holiday rentals</div><div class="option-desc">Airbnb, holiday homes, serviced apartments</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3: OWNERSHIP STRUCTURE -->
+    <div class="screen" id="screen-q3">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 3 / 6</span><button class="q-back" onclick="goBack('screen-q2',33)">← Back</button></div>
+        <div class="q-hook loss">This is the question most foreign investors can't actually answer.</div>
+        <div class="q-title">How do you legally own these properties?</div>
+        <div class="q-sub">This single fact decides your entire corporate tax liability. If you're unsure, that itself is worth knowing.</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this,'q3','personal','screen-q4',50)"><div class="option-icon">👤</div><div><div class="option-label">Personally, in my own name</div><div class="option-desc">No company, just you as an individual</div></div></div>
+          <div class="option" onclick="selectOption(this,'q3','uae-company','screen-q4',50)"><div class="option-icon">🏢</div><div><div class="option-label">Through a UAE company</div><div class="option-desc">LLC, free zone company, or similar entity</div></div></div>
+          <div class="option" onclick="selectOption(this,'q3','foreign-company','screen-q4',50)"><div class="option-icon">🌍</div><div><div class="option-label">Through a foreign company</div><div class="option-desc">Company registered outside UAE</div></div></div>
+          <div class="option" onclick="selectOption(this,'q3','unsure','screen-q4',50)"><div class="option-icon">❓</div><div><div class="option-label">Honestly, I'm not sure</div><div class="option-desc">More common than you'd think. Let's find out together</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4: INCOME -->
+    <div class="screen" id="screen-q4">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 4 / 6</span><button class="q-back" onclick="goBack('screen-q3',50)">← Back</button></div>
+        <div class="q-hook warn">Cross AED 375,000 and the rules change. Most people don't notice the exact moment.</div>
+        <div class="q-title">What's your total annual rental income?</div>
+        <div class="q-sub">All UAE properties combined, per year. Doesn't need to be exact, close is fine.</div>
+        <div class="slider-wrap">
+          <div class="slider-display"><span class="slider-val" id="incomeVal">375,000</span><span class="slider-unit">AED / year</span></div>
+          <input type="range" min="50000" max="2000000" step="25000" value="375000" id="incomeSlider" oninput="updateSlider(this.value)">
+          <div class="slider-labels"><span>AED 50K</span><span>AED 375K THRESHOLD</span><span>AED 2M+</span></div>
+          <div class="threshold-warn" id="thresholdWarn">You're above AED 375,000. Corporate tax & VAT rules may now apply to you</div>
+        </div>
+        <button class="btn-primary" onclick="nextQuestion('screen-q5',66)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Q5: TRACKING METHOD -->
+    <div class="screen" id="screen-q5">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 5 / 6</span><button class="q-back" onclick="goBack('screen-q4',66)">← Back</button></div>
+        <div class="q-hook loss">This answer alone tells us roughly how much you're already losing.</div>
+        <div class="q-title">Right now, how are you tracking deductions?</div>
+        <div class="q-sub">Be honest. There's no wrong answer, but the real one changes your number significantly.</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this,'q5','accountant','screen-q6',83)"><div class="option-icon">🧾</div><div><div class="option-label">I pay an accountant annually</div><div class="option-desc">They handle it once a year, mostly reactive</div></div></div>
+          <div class="option" onclick="selectOption(this,'q5','spreadsheet','screen-q6',83)"><div class="option-icon">📊</div><div><div class="option-label">I track it myself in a spreadsheet</div><div class="option-desc">Manual, time-consuming, easy to miss things</div></div></div>
+          <div class="option" onclick="selectOption(this,'q5','nothing','screen-q6',83)"><div class="option-icon">🤷</div><div><div class="option-label">Honestly, I don't track it closely</div><div class="option-desc">No real system in place right now</div></div></div>
+          <div class="option" onclick="selectOption(this,'q5','propertymanager','screen-q6',83)"><div class="option-icon">🏘️</div><div><div class="option-label">My property manager handles it</div><div class="option-desc">They send reports, but rarely flag deductions</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q6: RESIDENCY -->
+    <div class="screen" id="screen-q6">
+      <div class="question-wrap">
+        <div class="q-meta"><span class="q-step">Question 6 / 6</span><button class="q-back" onclick="goBack('screen-q5',83)">← Back</button></div>
+        <div class="q-hook sapphire">Last one. This often reveals money you're owed, not money you owe.</div>
+        <div class="q-title">Where do you currently live?</div>
+        <div class="q-sub">Your residency can unlock double tax treaty benefits most overseas investors never claim.</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this,'q6','uae-resident','screen-calculating',100)"><div class="option-icon">🇦🇪</div><div><div class="option-label">UAE resident</div><div class="option-desc">Living in Dubai, Abu Dhabi, or other Emirates</div></div></div>
+          <div class="option" onclick="selectOption(this,'q6','uk','screen-calculating',100)"><div class="option-icon">🇬🇧</div><div><div class="option-label">United Kingdom</div><div class="option-desc">UK-based investor with UAE property</div></div></div>
+          <div class="option" onclick="selectOption(this,'q6','india','screen-calculating',100)"><div class="option-icon">🇮🇳</div><div><div class="option-label">India</div><div class="option-desc">India-based investor with UAE property</div></div></div>
+          <div class="option" onclick="selectOption(this,'q6','other','screen-calculating',100)"><div class="option-icon">🌍</div><div><div class="option-label">Other country</div><div class="option-desc">Investor based elsewhere internationally</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-calculating">
+      <div class="calculating">
+        <div class="calc-anim"></div>
+        <div class="calc-title">Finding your leak...</div>
+        <div class="calc-sub">Running current UAE tax rules against your exact profile</div>
+        <div class="calc-steps">
+          <div class="calc-step">> checking corporate tax liability</div>
+          <div class="calc-step">> assessing VAT obligations</div>
+          <div class="calc-step">> calculating missed deductions</div>
+          <div class="calc-step">> cross-checking tracking method</div>
+          <div class="calc-step">> preparing your full report</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-results">
+      <div class="results">
+        <div class="results-header">
+          <div class="results-badge">LEAK FOUND</div>
+          <div class="results-title">Your UAE Tax Position</div>
+          <div class="results-sub" id="resultsSummary"></div>
+        </div>
+
+        <div class="money-loss-box">
+          <div class="ml-label">ESTIMATED ANNUAL MONEY LEAVING YOUR POCKET</div>
+          <div class="ml-amount" id="mlAmount">AED 0</div>
+          <div class="ml-monthly" id="mlMonthly"></div>
+          <div class="ml-breakdown" id="mlBreakdown"></div>
+        </div>
+
+        <div class="status-grid" id="statusGrid"></div>
+
+        <div class="section-title">WHAT TO DO RIGHT NOW</div>
+        <div class="action-list" id="actionList"></div>
+
+        <div class="chat-teaser">
+          <div class="ct-header"><div class="ct-dot"></div><div class="ct-title">Ask your AI accountant anything</div><div class="ct-locked">UNLOCK</div></div>
+          <div class="chat-bubble">Am I liable for corporate tax on my Dubai apartments?</div>
+          <div class="chat-bubble ai" id="aiResponse">Based on your profile, you own personally with residential properties below AED 375K, so you're fully exempt from corporate tax. However, I noticed deductions you haven't claimed...</div>
+          <div class="chat-unlock" onclick="showEmailForm()">Unlock unlimited AI chat →</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="dashboard-preview">
+          <div class="preview-header"><span class="preview-title">Your full Finclare dashboard</span><span class="preview-tag">LOCKED</span></div>
+          <div class="preview-body">
+            <div class="preview-stats">
+              <div class="preview-stat"><div class="ps-label">MONTHLY INCOME</div><div class="ps-val" id="pvIncome">AED —</div><div class="ps-sub">Live tracking</div></div>
+              <div class="preview-stat"><div class="ps-label">TAX SAVED</div><div class="ps-val" id="pvSaved">AED —</div><div class="ps-sub">This year</div></div>
+              <div class="preview-stat"><div class="ps-label">NET YIELD</div><div class="ps-val">7.2%</div><div class="ps-sub">Above avg</div></div>
+            </div>
+            <div class="preview-row"><span class="pr-label">Deduction alerts ready</span><span class="pr-val">View →</span></div>
+            <div class="preview-row"><span class="pr-label">Q2 investor report</span><span class="pr-val">Generate →</span></div>
+            <div class="preview-row"><span class="pr-label">FTA deadline in 12 days</span><span class="pr-val">Review →</span></div>
+          </div>
+          <div class="preview-overlay">
+            <div class="overlay-title">Your real numbers. Updated live.</div>
+            <div class="overlay-sub">Unlock to see your actual portfolio performance, auto-tracked deductions, and compliance status in real time.</div>
+          </div>
+        </div>
+
+        <div class="upgrade-box">
+          <div class="upgrade-saving" id="upgradeSaving">Save AED 6,200+ in year one</div>
+          <div class="upgrade-price">AED 299<span>/month</span></div>
+          <div class="upgrade-vs">vs AED 8,000+/year for a human accountant</div>
+          <div class="upgrade-desc" id="upgradeDesc">Stop losing money on missed deductions and accountant fees. Finclare becomes your virtual accountant, monitoring this exact profile automatically every month, and pays for itself in the first one.</div>
+          <div class="upgrade-features">
+            <div class="uf">REAL-TIME DASHBOARD</div><div class="uf">AUTO DEDUCTIONS</div><div class="uf">FTA ALERTS</div>
+            <div class="uf">AI CHAT</div><div class="uf">ONE-TAP REPORTS</div><div class="uf">VAT COMPLIANCE</div>
+          </div>
+          <button class="btn-light" onclick="showEmailForm()">Stop The Leak: Get Early Access →</button>
+          <button class="btn-secondary" onclick="showEmailForm()">Join waitlist, no credit card required</button>
+        </div>
+
+        <div class="email-wrap" id="emailWrap" style="display:none">
+          <div class="email-label">ENTER YOUR EMAIL TO GET ACCESS</div>
+          <form action="https://app.us17.list-manage.com/subscribe/post?u=90b0e27c056bbeab4c6e38c09&id=b4d3b38a82&f_id=00d80fe0f0" method="post" target="_blank" onsubmit="submitEmail()" style="display:flex;gap:8px;">
+            <input type="email" name="EMAIL" class="email-input" placeholder="your@email.com" id="userEmail" required/>
+            <button type="submit" class="btn-sm">Get Access</button>
+          </form>
+          <div class="success-note" id="successNote">You're in the beta. We'll reach out personally before launch. Welcome to Finclare.</div>
+        </div>
+
+        <div class="footer-note">FREE DURING BETA · NO CREDIT CARD REQUIRED · BUILT FOR UAE PROPERTY INVESTORS</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = { propCount: 1, q2: null, q3: null, income: 375000, q5: null, q6: null };
+
+function startCalc() { showScreen('screen-q1'); setProgress(0); trackEvent('calculator_started', 'MVP', 'Start Button Clicked'); }
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function setProgress(p) { document.getElementById('progressFill').style.width = p + '%'; }
+
+function adjustCount(delta) {
+  state.propCount = Math.max(1, Math.min(500, state.propCount + delta));
+  syncCountDisplay();
+}
+function setCountManual(val) {
+  let n = parseInt(val);
+  if (isNaN(n) || n < 1) n = 1;
+  if (n > 500) n = 500;
+  state.propCount = n;
+  syncCountDisplay(true);
+}
+function syncCountDisplay(skipManualUpdate) {
+  document.getElementById('countNum').textContent = state.propCount;
+  document.getElementById('countLabel').textContent = state.propCount === 1 ? 'property' : 'properties';
+  if (!skipManualUpdate) document.getElementById('countManual').value = state.propCount;
+}
+function confirmCount() { showScreen('screen-q2'); setProgress(16); trackEvent('property_count_set', 'MVP', String(state.propCount)); }
+
+function selectOption(el, key, val, next, progress) {
+  el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state[key] = val;
+  setTimeout(() => {
+    if (next === 'screen-calculating') { showScreen(next); setProgress(100); runCalculation(); }
+    else { showScreen(next); setProgress(progress); }
+  }, 260);
+}
+
+function nextQuestion(next, progress) { showScreen(next); setProgress(progress); }
+function goBack(target, progress) { showScreen(target); setProgress(progress); }
+
+function updateSlider(val) {
+  state.income = parseInt(val);
+  document.getElementById('incomeVal').textContent = parseInt(val).toLocaleString();
+  document.getElementById('thresholdWarn').style.display = parseInt(val) > 375000 ? 'block' : 'none';
+}
+
+function runCalculation() { setTimeout(() => { buildResults(); showScreen('screen-results'); }, 3600); }
+
+function buildResults() {
+  trackEvent('results_viewed', 'MVP', 'Calculator Completed');
+  const { propCount, q2, q3, income, q5, q6 } = state;
+  const statuses = [], actions = [];
+  let totalLoss = 0, lossBreakdown = [];
+
+  const trackingMultiplier = q5 === 'nothing' ? 1.4 : q5 === 'spreadsheet' ? 1.15 : q5 === 'propertymanager' ? 1.1 : 1.0;
+  const trackingLabel = q5 === 'nothing' ? "no active tracking" : q5 === 'spreadsheet' ? "manual spreadsheet tracking" : q5 === 'propertymanager' ? "property manager reports" : "an annual accountant";
+
+  const mgmtFeesMissed = Math.round(income * 0.05 * trackingMultiplier);
+  const maintenanceMissed = Math.round(propCount * 1800 * trackingMultiplier);
+  const serviceChargesMissed = Math.round(propCount * 2400 * trackingMultiplier);
+  const softwareMissed = 1200;
+  const baseDedMissed = mgmtFeesMissed + maintenanceMissed + serviceChargesMissed + softwareMissed;
+  totalLoss += baseDedMissed;
+  lossBreakdown.push({ label: 'Unclaimed management fee deductions', amount: mgmtFeesMissed, type: 'loss' });
+  lossBreakdown.push({ label: 'Missed maintenance & repair deductions', amount: maintenanceMissed, type: 'loss' });
+  lossBreakdown.push({ label: 'Service charges not claimed', amount: serviceChargesMissed, type: 'loss' });
+
+  let corpTaxRisk = 0;
+  if (q3 === 'uae-company' && income > 375000) {
+    corpTaxRisk = Math.round((income - 375000) * 0.09);
+    totalLoss += corpTaxRisk;
+    lossBreakdown.push({ label: 'Corporate tax exposure (9% above threshold)', amount: corpTaxRisk, type: 'loss' });
+    statuses.push({ type: 'alert', icon: '⚠️', label: 'CORPORATE TAX', title: `AED ${corpTaxRisk.toLocaleString()} estimated tax due`, desc: `Your company-owned properties with AED ${income.toLocaleString()} income are above the AED 375,000 threshold. 9% corporate tax applies on the excess.` });
+    actions.push('Register for corporate tax with the FTA immediately. Penalty for late registration is AED 10,000+');
+  } else if (q3 === 'personal') {
+    statuses.push({ type: 'safe', icon: '✅', label: 'CORPORATE TAX', title: 'Exempt, you own personally', desc: 'Personal property ownership is not subject to UAE corporate tax. Your rental income is safe at the corporate level.' });
+  } else if (q3 === 'foreign-company') {
+    const foreignRisk = Math.round(income * 0.06);
+    totalLoss += foreignRisk;
+    lossBreakdown.push({ label: 'Unresolved foreign company tax risk', amount: foreignRisk, type: 'loss' });
+    statuses.push({ type: 'warn', icon: '⚡', label: 'CORPORATE TAX', title: 'Complex structure, estimated AED ' + foreignRisk.toLocaleString() + ' at risk', desc: 'Foreign company ownership has specific UAE rules. Liability depends on registration country and treaty status, and needs urgent review.' });
+    actions.push('Consult a UAE tax professional about your foreign company structure. Risk of unexpected liability.');
+  } else {
+    statuses.push({ type: 'warn', icon: '❓', label: 'OWNERSHIP STRUCTURE', title: 'Unknown structure = unknown risk', desc: 'Your ownership structure determines your entire tax position. This must be clarified before you know what you owe.' });
+    actions.push('Clarify your ownership structure immediately. This affects every other part of your tax position.');
+  }
+
+  if (q2 === 'residential') {
+    statuses.push({ type: 'safe', icon: '✅', label: 'VAT', title: 'Exempt, residential rental is VAT-free', desc: 'Long-term residential rentals are exempt from UAE VAT. No VAT registration required for residential-only portfolios.' });
+  } else if (q2 === 'commercial' && income > 375000) {
+    const vatMissed = Math.round(income * 0.05);
+    totalLoss += vatMissed;
+    lossBreakdown.push({ label: 'Unregistered VAT exposure (5% on commercial)', amount: vatMissed, type: 'loss' });
+    statuses.push({ type: 'alert', icon: '⚠️', label: 'VAT', title: `5% VAT applies. AED ${vatMissed.toLocaleString()} exposure`, desc: 'Commercial rental above AED 375,000 requires FTA VAT registration. Penalty for non-registration: AED 20,000.' });
+    actions.push('Register for VAT with FTA immediately. Non-registration penalty is AED 20,000.');
+  } else if (q2 === 'shortterm') {
+    const stRisk = Math.round(income * 0.05);
+    totalLoss += stRisk;
+    lossBreakdown.push({ label: 'Short-term rental VAT liability', amount: stRisk, type: 'loss' });
+    statuses.push({ type: 'alert', icon: '⚠️', label: 'VAT', title: `Short-term rentals are taxable. AED ${stRisk.toLocaleString()} at risk`, desc: 'Holiday home and Airbnb rentals are taxable supplies. VAT registration is mandatory above AED 375,000 annual income.' });
+    actions.push('Verify your holiday home VAT registration status. Short-term rentals are taxable under UAE VAT law.');
+  } else if (q2 === 'mixed') {
+    statuses.push({ type: 'warn', icon: '⚡', label: 'VAT', title: 'Partial exemption applies, apportionment needed', desc: 'Mixed portfolios require careful split between exempt residential and taxable commercial income. Easy to miscalculate.' });
+    actions.push('Calculate your VAT apportionment ratio accurately. Errors in mixed portfolios trigger FTA audits.');
+  } else {
+    statuses.push({ type: 'safe', icon: '✅', label: 'VAT', title: 'Below threshold, no VAT required yet', desc: 'Your commercial income is below AED 375,000. Monitor as income grows, since registration becomes mandatory at threshold.' });
+  }
+
+  if (q3 === 'personal' && q2 === 'residential') {
+    statuses.push({ type: 'safe', icon: '✅', label: 'FTA COMPLIANCE', title: 'No action required currently', desc: 'Your structure requires no FTA filings right now. This changes if income grows or you change structure.' });
+  } else {
+    statuses.push({ type: 'warn', icon: '📋', label: 'FTA COMPLIANCE', title: 'Review your FTA registration status', desc: 'Based on your property type and structure, verify your FTA registration reflects your current portfolio accurately.' });
+    actions.push('Review and update your FTA registration. Outdated registrations are a common cause of penalties.');
+  }
+
+  if (q6 !== 'uae-resident') {
+    const treatyBenefit = Math.round(income * 0.03);
+    totalLoss += treatyBenefit;
+    lossBreakdown.push({ label: 'Unclaimed double-tax treaty benefit', amount: treatyBenefit, type: 'profit' });
+    actions.push(`Check the UAE-${q6 === 'uk' ? 'UK' : q6 === 'india' ? 'India' : 'your country'} double tax treaty. Most overseas investors never claim these savings.`);
+  }
+
+  actions.push(`Claim AED ${baseDedMissed.toLocaleString()} in legitimate deductions, easy to miss with ${trackingLabel}.`);
+
+  document.getElementById('mlAmount').textContent = 'AED ' + totalLoss.toLocaleString();
+  document.getElementById('mlMonthly').textContent = `That's AED ${Math.round(totalLoss/12).toLocaleString()} every month, partly explained by relying on ${trackingLabel}.`;
+  document.getElementById('mlBreakdown').innerHTML = lossBreakdown.slice(0,3).map(b => {
+    const isProfit = b.type === 'profit';
+    return `<div class="ml-row"><span>${b.label}</span><span style="color:${isProfit ? 'var(--profit)' : 'var(--loss)'}">${isProfit ? '+' : '−'}AED ${b.amount.toLocaleString()}</span></div>`;
+  }).join('');
+
+  document.getElementById('statusGrid').innerHTML = statuses.map(s => `
+    <div class="status-card ${s.type}"><div class="status-icon">${s.icon}</div>
+    <div><div class="status-label">${s.label}</div><div class="status-title">${s.title}</div><div class="status-desc">${s.desc}</div></div></div>`).join('');
+
+  document.getElementById('actionList').innerHTML = actions.slice(0,3).map((a,i) => `
+    <div class="action-item"><div class="action-num">${i+1}</div><div>${a}</div></div>`).join('');
+
+  document.getElementById('resultsSummary').textContent = `${propCount} ${q2} ${q3 === 'personal' ? 'personal' : 'company-owned'} ${propCount === 1 ? 'property' : 'properties'} · AED ${income.toLocaleString()} annual income`;
+  document.getElementById('pvIncome').textContent = 'AED ' + Math.round(income/12).toLocaleString();
+  document.getElementById('pvSaved').textContent = 'AED ' + baseDedMissed.toLocaleString();
+  document.getElementById('upgradeSaving').textContent = `Save AED ${Math.max(totalLoss - 3588, 1000).toLocaleString()}+ in year one vs your current situation`;
+  document.getElementById('upgradeDesc').textContent = `You're currently losing an estimated AED ${totalLoss.toLocaleString()} per year. Finclare costs AED 3,588/year and pays for itself in the first month by recovering your missed deductions alone.`;
+  document.getElementById('aiResponse').textContent = `Based on your profile (${propCount} ${q2} ${q3 === 'personal' ? 'personal' : 'company-owned'} properties with AED ${income.toLocaleString()} income), I've identified AED ${baseDedMissed.toLocaleString()} in unclaimed deductions. Your biggest opportunity is management fee deductions. Want me to walk you through exactly how to claim them?`;
+}
+
+function showEmailForm() {
+  trackEvent('email_form_opened', 'MVP', 'Unlock Button Clicked');
+  const wrap = document.getElementById('emailWrap');
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function submitEmail() {
+  trackEvent('email_submitted', 'MVP', 'Email Captured');
+  const email = document.getElementById('userEmail').value;
+  if (!email || !email.includes('@')) { document.getElementById('userEmail').style.borderColor = 'var(--loss)'; return false; }
+  setTimeout(() => {
+    document.getElementById('emailWrap').querySelector('form').style.display = 'none';
+    document.getElementById('successNote').style.display = 'block';
+  }, 800);
+  return true;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finclare: The Money You're Losing on Your Dubai Property</title>
+<meta name="description" content="A live look at what your UAE property is actually costing you. 2 minutes. No signup.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NLMZJB0H5C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NLMZJB0H5C');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #07080B;
+  --carbon: #0D0F14;
+  --graphite: #14171F;
+  --graphite-2: #1A1E29;
+  --steel: #262B38;
+  --steel-light: #343B4D;
+  --sapphire: #3D7FFF;
+  --sapphire-bright: #6BA0FF;
+  --sapphire-dim: rgba(61,127,255,0.12);
+  --sapphire-glow: rgba(61,127,255,0.4);
+  --text: #F1F2F6;
+  --text-mid: #9CA2B5;
+  --text-dim: #565D72;
+  --profit: #2ECC8E;
+  --profit-bg: rgba(46,204,142,0.1);
+  --profit-border: rgba(46,204,142,0.28);
+  --loss: #FF5C72;
+  --loss-bg: rgba(255,92,114,0.1);
+  --loss-border: rgba(255,92,114,0.28);
+  --warn: #FFC95C;
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--void); color: var(--text); font-family: 'Manrope', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; cursor: default; }
+.mono { font-family: var(--mono); }
+::selection { background: var(--sapphire-dim); color: var(--sapphire-bright); }
+
+/* AMBIENT */
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(61,127,255,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 45% at 95% 50%, rgba(255,92,114,0.04) 0%, transparent 55%), radial-gradient(ellipse 45% 40% at 5% 80%, rgba(61,127,255,0.05) 0%, transparent 55%); }
+.grid-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.35; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 56px 56px; }
+.noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 48px; display: flex; align-items: center; justify-content: space-between; background: rgba(7,8,11,0.65); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); transition: border-color 0.3s, background 0.3s; }
+nav.scrolled { background: rgba(7,8,11,0.9); border-bottom-color: rgba(255,255,255,0.08); }
+.nav-brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+.nav-mark { width: 27px; height: 27px; background: linear-gradient(135deg, var(--sapphire), var(--sapphire-bright)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--void); box-shadow: 0 0 18px var(--sapphire-glow); }
+.nav-cta { background: var(--sapphire); color: white; border: none; padding: 9px 19px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.25s cubic-bezier(0.2,0.8,0.2,1); position: relative; overflow: hidden; }
+.nav-cta:hover { background: var(--sapphire-bright); box-shadow: 0 0 28px var(--sapphire-glow); transform: translateY(-1px); }
+
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 48px 60px; position: relative; }
+.hero-inner { position: relative; z-index: 2; max-width: 1220px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; width: 100%; }
+
+.fade-up { opacity: 0; transform: translateY(28px); animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--loss); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 26px; padding: 7px 14px 7px 10px; background: var(--loss-bg); border: 1px solid var(--loss-border); border-radius: 100px; }
+.pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--loss); box-shadow: 0 0 8px var(--loss); animation: pulse 1.6s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.hero h1 { font-size: clamp(34px, 4.6vw, 56px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--text); margin-bottom: 22px; }
+.hero h1 .leak { color: var(--loss); }
+.hero h1 .grad { background: linear-gradient(120deg, var(--sapphire-bright), var(--sapphire)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+.hero-sub { font-size: 17px; color: var(--text-mid); max-width: 490px; margin-bottom: 34px; font-weight: 400; line-height: 1.75; }
+.hero-sub strong { color: var(--text); font-weight: 600; }
+
+.hero-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; }
+
+.btn-primary { background: var(--sapphire); color: white; border: none; padding: 17px 32px; border-radius: 11px; font-size: 15.5px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; position: relative; box-shadow: 0 0 0 0 var(--sapphire-glow); }
+.btn-primary::after { content: '→'; transition: transform 0.25s; }
+.btn-primary:hover { background: var(--sapphire-bright); transform: translateY(-2px); box-shadow: 0 10px 34px -6px var(--sapphire-glow); }
+.btn-primary:hover::after { transform: translateX(4px); }
+
+.hero-meta { font-size: 13px; color: var(--text-dim); }
+.hero-meta strong { color: var(--text-mid); }
+
+.hero-micro { display: flex; gap: 18px; flex-wrap: wrap; }
+.micro-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-dim); }
+.micro-check { color: var(--profit); font-size: 13px; }
+
+/* LEAK METER — SIGNATURE ELEMENT */
+.leak-meter { background: linear-gradient(165deg, var(--graphite), var(--carbon)); border: 1px solid var(--steel); border-radius: 18px; position: relative; box-shadow: 0 50px 90px -30px rgba(0,0,0,0.7); overflow: hidden; }
+.leak-meter::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--loss), transparent); opacity: 0.7; z-index: 2; }
+
+.lm-header { padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; }
+.lm-dots { display: flex; gap: 7px; }
+.lm-dot { width: 9px; height: 9px; border-radius: 50%; }
+.lm-live { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--loss); letter-spacing: 0.06em; text-transform: uppercase; }
+.lm-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--loss); animation: pulse 1.4s infinite; }
+
+.lm-body { padding: 30px 28px; }
+.lm-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+
+.lm-number-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.lm-currency { font-size: 22px; color: var(--text-mid); font-weight: 600; }
+.lm-number { font-family: var(--mono); font-size: 52px; font-weight: 700; color: var(--loss); letter-spacing: -0.02em; line-height: 1; }
+.lm-cents { font-family: var(--mono); font-size: 24px; color: var(--loss); opacity: 0.55; }
+
+.lm-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; }
+.lm-sub strong { color: var(--text-mid); }
+
+.lm-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.lm-bar-row { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; margin-bottom: 5px; }
+.lm-bar-label { color: var(--text-mid); }
+.lm-bar-val { font-family: var(--mono); font-weight: 600; color: var(--loss); }
+.lm-bar-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.lm-bar-fill { height: 100%; background: linear-gradient(90deg, var(--loss), #FF8A9A); border-radius: 3px; width: 0%; transition: width 1.4s cubic-bezier(0.16,1,0.3,1); }
+
+.lm-footer { padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* TRUST STRIP */
+.trust-strip { border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 30px 48px; display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap; position: relative; z-index: 2; }
+.trust-item { display: flex; align-items: center; gap: 11px; font-size: 13px; color: var(--text-dim); }
+.trust-num { font-family: var(--mono); font-weight: 700; color: var(--sapphire-bright); font-size: 18px; }
+
+/* SECTION SYSTEM */
+.section { padding: 130px 48px; max-width: 1220px; margin: 0 auto; position: relative; z-index: 2; }
+.reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-scale { opacity: 0; transform: scale(0.96); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+.section-eyebrow { font-family: var(--mono); font-size: 11.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.section-eyebrow.sapphire { color: var(--sapphire-bright); }
+.section-eyebrow.loss { color: var(--loss); }
+.section-eyebrow.profit { color: var(--profit); }
+.section-eyebrow::before { content: ''; width: 20px; height: 1px; background: currentColor; opacity: 0.5; }
+
+.section-title { font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px; max-width: 760px; }
+.section-sub { font-size: 16px; color: var(--text-mid); max-width: 560px; margin-bottom: 60px; font-weight: 400; line-height: 1.75; }
+
+/* PAIN — NAMED FEARS */
+.fear-stack { display: flex; flex-direction: column; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+.fear-row { background: var(--carbon); padding: 38px 42px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: center; transition: background 0.3s; }
+.fear-row:hover { background: var(--graphite); }
+.fear-tag { font-family: var(--mono); font-size: 12px; color: var(--loss); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.fear-row h3 { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.35; }
+.fear-row p { font-size: 14.5px; color: var(--text-mid); line-height: 1.75; }
+.fear-row .figure { color: var(--loss); font-weight: 700; font-family: var(--mono); }
+
+/* TRANSFORMATION — BEFORE/AFTER */
+.transform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+.transform-col { padding: 40px; }
+.transform-col.before { background: var(--carbon); }
+.transform-col.after { background: linear-gradient(165deg, rgba(46,204,142,0.05), var(--carbon)); }
+.tc-tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 24px; display: inline-block; padding: 5px 12px; border-radius: 100px; }
+.before .tc-tag { color: var(--loss); background: var(--loss-bg); border: 1px solid var(--loss-border); }
+.after .tc-tag { color: var(--profit); background: var(--profit-bg); border: 1px solid var(--profit-border); }
+.tc-list { display: flex; flex-direction: column; gap: 16px; }
+.tc-list-item { display: flex; gap: 12px; font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+.tc-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+.before .tc-icon { color: var(--loss); }
+.after .tc-icon { color: var(--profit); }
+
+/* DEMO PROFILES */
+.demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+.demo-card { background: var(--carbon); padding: 34px 30px; transition: background 0.3s, transform 0.3s; position: relative; }
+.demo-card:hover { background: var(--graphite); transform: translateY(-4px); }
+.demo-q { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+.demo-a { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
+.demo-result { font-size: 13.5px; color: var(--text-mid); line-height: 1.75; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.07); }
+.demo-result .num.loss { color: var(--loss); font-weight: 700; font-family: var(--mono); }
+.demo-result .num.profit { color: var(--profit); font-weight: 700; font-family: var(--mono); }
+
+/* HOW IT WORKS — TIMELINE */
+.how-rail { position: relative; padding-left: 32px; border-left: 1px solid var(--steel); }
+.how-step { position: relative; padding-bottom: 48px; }
+.how-step:last-child { padding-bottom: 0; }
+.how-step::before { content: ''; position: absolute; left: -37px; top: 4px; width: 11px; height: 11px; border-radius: 50%; background: var(--carbon); border: 2px solid var(--sapphire); box-shadow: 0 0 0 4px var(--void); }
+.how-step.active::before { background: var(--sapphire); box-shadow: 0 0 16px var(--sapphire-glow), 0 0 0 4px var(--void); }
+.how-step-time { font-family: var(--mono); font-size: 11px; color: var(--sapphire-bright); margin-bottom: 8px; letter-spacing: 0.05em; }
+.how-step h3 { font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.how-step p { font-size: 14.5px; color: var(--text-mid); line-height: 1.7; max-width: 480px; }
+
+/* CALC CTA */
+.calc-section { padding: 130px 48px; position: relative; z-index: 2; }
+.calc-inner { max-width: 840px; margin: 0 auto; text-align: center; }
+.calc-card { background: linear-gradient(165deg, var(--graphite), var(--carbon)); border: 1px solid var(--steel); border-radius: 22px; padding: 60px 50px; margin-top: 48px; position: relative; overflow: hidden; box-shadow: 0 50px 90px -30px rgba(0,0,0,0.6); }
+.calc-card::before { content: ''; position: absolute; top: -50%; left: 50%; width: 700px; height: 700px; background: radial-gradient(circle, var(--sapphire-dim) 0%, transparent 70%); transform: translateX(-50%); pointer-events: none; animation: rotateGlow 12s linear infinite; }
+@keyframes rotateGlow { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+.calc-icon { width: 58px; height: 58px; background: linear-gradient(135deg, var(--sapphire), var(--sapphire-bright)); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; color: white; font-size: 23px; font-weight: 800; box-shadow: 0 0 44px var(--sapphire-glow); position: relative; z-index: 1; }
+.calc-card h3 { font-size: 28px; font-weight: 800; margin-bottom: 14px; position: relative; z-index: 1; }
+.calc-card p { font-size: 15px; color: var(--text-mid); max-width: 440px; margin: 0 auto 34px; line-height: 1.75; position: relative; z-index: 1; }
+.calc-questions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 34px; position: relative; z-index: 1; }
+.calc-tag { font-family: var(--mono); font-size: 12px; color: var(--text-mid); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 14px; }
+
+/* PROOF */
+.proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+.proof-card { background: var(--carbon); padding: 34px; transition: background 0.3s; }
+.proof-card:hover { background: var(--graphite); }
+.proof-quote { font-size: 14.5px; color: var(--text-mid); line-height: 1.8; margin-bottom: 22px; }
+.proof-quote .figure { color: var(--profit); font-weight: 700; font-family: var(--mono); }
+.proof-author { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
+.proof-author strong { color: var(--text); font-weight: 600; }
+.proof-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--graphite-2); border: 1px solid var(--steel); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--sapphire-bright); flex-shrink: 0; }
+
+/* FINAL CTA */
+.final-cta { padding: 150px 48px; text-align: center; position: relative; z-index: 2; }
+.final-cta h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; margin-bottom: 24px; letter-spacing: -0.02em; line-height: 1.15; }
+.final-cta .grad { background: linear-gradient(120deg, var(--sapphire-bright), var(--sapphire)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.final-cta p { font-size: 17px; color: var(--text-mid); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+
+footer { padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-top: 1px solid rgba(255,255,255,0.06); position: relative; z-index: 2; }
+.footer-brand { font-size: 15px; font-weight: 700; color: var(--text-mid); }
+.footer-copy { font-size: 13px; color: var(--text-dim); }
+
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .fear-row { grid-template-columns: 1fr; gap: 16px; }
+  .transform-grid, .demo-grid, .proof-grid { grid-template-columns: 1fr; }
+  .trust-strip { gap: 32px; }
+}
+@media (max-width: 600px) {
+  nav { padding: 14px 24px; }
+  .hero { padding: 100px 24px 50px; }
+  .section, .calc-section, .final-cta { padding: 80px 24px; }
+  .fear-row, .demo-card, .proof-card, .transform-col { padding: 26px 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="grid-overlay"></div>
+<div class="noise"></div>
+
+<nav id="nav">
+  <div class="nav-brand"><div class="nav-mark">F</div>Finclare</div>
+  <a href="finclare-mvp.html" class="nav-cta" onclick="gtag('event','cta_click',{'location':'topbar'})">See My Number</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow fade-up" style="animation-delay:0.05s"><div class="pulse-dot"></div>YOUR PROPERTY IS LOSING MONEY RIGHT NOW</div>
+      <h1 class="fade-up" style="animation-delay:0.15s">There's a <span class="leak">leak</span> in your Dubai property. It's been running since the day you bought it.</h1>
+      <p class="hero-sub fade-up" style="animation-delay:0.25s">Not a metaphor. A real number. <strong>Missed deductions, unresolved VAT, treaty benefits you never claimed.</strong> Most UAE investors are bleeding money quietly because nobody ever sat them down and explained the 2023 rules properly. Including, probably, your accountant.</p>
+      <div class="hero-actions fade-up" style="animation-delay:0.35s">
+        <a href="finclare-mvp.html" class="btn-primary" onclick="gtag('event','cta_click',{'location':'hero'})">Find My Leak, Free</a>
+        <div class="hero-meta"><strong>2 minutes.</strong> See the number before you decide anything.</div>
+      </div>
+      <div class="hero-micro fade-up" style="animation-delay:0.45s">
+        <div class="micro-item"><span class="micro-check">✓</span>No signup to see your result</div>
+        <div class="micro-item"><span class="micro-check">✓</span>Built for current UAE tax law</div>
+      </div>
+    </div>
+
+    <div class="leak-meter fade-up" style="animation-delay:0.3s">
+      <div class="lm-header">
+        <div class="lm-dots">
+          <div class="lm-dot" style="background:#FF5C72"></div>
+          <div class="lm-dot" style="background:#FFC95C"></div>
+          <div class="lm-dot" style="background:#2ECC8E"></div>
+        </div>
+        <div class="lm-live"><div class="lm-live-dot"></div>SAMPLE / LIVE ESTIMATE</div>
+      </div>
+      <div class="lm-body">
+        <div class="lm-label">DUBAI LANDLORD · 3 UNITS · UK-BASED</div>
+        <div class="lm-number-row">
+          <span class="lm-currency">AED</span>
+          <span class="lm-number" id="heroCounter">0</span>
+        </div>
+        <div class="lm-sub">leaking out of this portfolio <strong>every single year</strong></div>
+
+        <div class="lm-bars">
+          <div>
+            <div class="lm-bar-row"><span class="lm-bar-label">Missed deductions</span><span class="lm-bar-val">AED 6,200</span></div>
+            <div class="lm-bar-track"><div class="lm-bar-fill" data-width="78"></div></div>
+          </div>
+          <div>
+            <div class="lm-bar-row"><span class="lm-bar-label">VAT exposure unresolved</span><span class="lm-bar-val">AED 3,800</span></div>
+            <div class="lm-bar-track"><div class="lm-bar-fill" data-width="48"></div></div>
+          </div>
+          <div>
+            <div class="lm-bar-row"><span class="lm-bar-label">Treaty benefit unclaimed</span><span class="lm-bar-val" style="color:var(--profit)">+AED 1,400</span></div>
+            <div class="lm-bar-track"><div class="lm-bar-fill" data-width="18" style="background:linear-gradient(90deg,var(--profit),#5FE0AC)"></div></div>
+          </div>
+        </div>
+
+        <div class="lm-footer">Six honest questions reveal this. Yours will look different, but odds are something's leaking.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-item"><span class="trust-num">300K+</span>foreign property owners in UAE</div>
+  <div class="trust-item"><span class="trust-num">2023</span>tax rules most still don't fully understand</div>
+  <div class="trust-item"><span class="trust-num">AED 8K+</span>paid to accountants yearly, on average</div>
+</div>
+
+<!-- FEAR STACK -->
+<section class="section" id="problem">
+  <div class="section-eyebrow loss reveal">THE FOUR QUIET COSTS</div>
+  <h2 class="section-title reveal">None of these show up on a bank statement. That's exactly the problem.</h2>
+  <p class="section-sub reveal">These aren't hypothetical. They're the specific, named ways UAE property investors lose money every year without ever seeing it happen.</p>
+
+  <div class="fear-stack reveal">
+    <div class="fear-row">
+      <div><div class="fear-tag">Cost 01: The Silent Threshold</div><h3>You crossed AED 375,000 and didn't notice</h3></div>
+      <p>The moment your income passes this line, corporate tax and VAT rules can activate, depending on how you own the property. Most investors don't track this number at all, which means they don't know the moment it starts to matter.</p>
+    </div>
+    <div class="fear-row">
+      <div><div class="fear-tag">Cost 02: The Annual Blind Spot</div><h3>Your accountant only looks once a year</h3></div>
+      <p>You're paying <span class="figure">AED 7,000–9,000/yr</span> for a once-a-year glance backward. Deductions that needed claiming in March don't get flagged until the following March, and by then it's often too late to claim them at all.</p>
+    </div>
+    <div class="fear-row">
+      <div><div class="fear-tag">Cost 03: The Deduction You Don't Know Exists</div><h3>Management fees. Service charges. Maintenance.</h3></div>
+      <p>All legally deductible. Almost none of it gets claimed by foreign investors, because nobody ever explained which receipts matter and which don't.</p>
+    </div>
+    <div class="fear-row">
+      <div><div class="fear-tag">Cost 04: The Sharpening Enforcement</div><h3>"I didn't know" is getting more expensive every year</h3></div>
+      <p>FTA enforcement has tightened steadily since 2023. The penalty for late VAT registration alone is <span class="figure">AED 20,000</span>. Waiting doesn't make this go away. It just makes the eventual correction more expensive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="section">
+  <div class="section-eyebrow sapphire reveal">BEFORE AND AFTER</div>
+  <h2 class="section-title reveal">Same property. Same income. Completely different position.</h2>
+  <p class="section-sub reveal">This is the actual shift, not a feature list. The lived difference between guessing and knowing.</p>
+
+  <div class="transform-grid reveal">
+    <div class="transform-col before">
+      <span class="tc-tag">Right now, probably</span>
+      <div class="tc-list">
+        <div class="tc-list-item"><span class="tc-icon">✕</span>You find out you owe something when the FTA tells you, not before</div>
+        <div class="tc-list-item"><span class="tc-icon">✕</span>Deductions get claimed once a year, if at all, if remembered</div>
+        <div class="tc-list-item"><span class="tc-icon">✕</span>You're paying AED 7,000–9,000/yr for a service that's reactive, not protective</div>
+        <div class="tc-list-item"><span class="tc-icon">✕</span>Every question to your accountant takes days to get answered</div>
+      </div>
+    </div>
+    <div class="transform-col after">
+      <span class="tc-tag">With your real position known</span>
+      <div class="tc-list">
+        <div class="tc-list-item"><span class="tc-icon">✓</span>You see threshold risk before you cross it, not after a penalty letter</div>
+        <div class="tc-list-item"><span class="tc-icon">✓</span>Deductions are tracked continuously. Nothing waits for March</div>
+        <div class="tc-list-item"><span class="tc-icon">✓</span>AED 299/month, less than half what most accountants charge yearly</div>
+        <div class="tc-list-item"><span class="tc-icon">✓</span>Plain-English answers in seconds, grounded in your actual numbers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO PROFILES -->
+<section class="section">
+  <div class="section-eyebrow sapphire reveal">SIX QUESTIONS, THREE OUTCOMES</div>
+  <h2 class="section-title reveal">Real profiles. Real numbers. Yours will land somewhere on this map.</h2>
+
+  <div class="demo-grid reveal">
+    <div class="demo-card">
+      <div class="demo-q">Profile</div>
+      <div class="demo-a">1 apartment, personal name, lives in UK</div>
+      <div class="demo-result">Fully exempt from corporate tax. But <span class="num loss">AED 3,800</span> in deductions never claimed, money that was always theirs.</div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-q">Profile</div>
+      <div class="demo-a">4 units through a UAE company</div>
+      <div class="demo-result"><span class="num loss">AED 9,200</span> in corporate tax exposure. The registration deadline already passed without them knowing.</div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-q">Profile</div>
+      <div class="demo-a">Short-term Airbnb unit, Dubai Marina</div>
+      <div class="demo-result">VAT registration required, currently unregistered. <span class="num loss">AED 20,000</span> penalty sitting there, waiting.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS — TIMELINE -->
+<section class="section">
+  <div class="section-eyebrow sapphire reveal">HOW THE NEXT TWO MINUTES GO</div>
+  <h2 class="section-title reveal">No account. No commitment. Just an honest answer.</h2>
+
+  <div class="how-rail reveal">
+    <div class="how-step active">
+      <div class="how-step-time">0:00</div>
+      <h3>Tell us about your properties</h3>
+      <p>How many, what kind, how you own them. Plain questions, no jargon, answered in plain language back.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-time">0:45</div>
+      <h3>We run it against current UAE tax law</h3>
+      <p>Corporate tax thresholds, VAT exemptions, FTA compliance, calculated against your specific structure, not generic advice copied from a blog.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-time">1:30</div>
+      <h3>You see your actual leak, in dirhams</h3>
+      <p>Not a vague warning. A specific number, broken down by exactly where it's coming from.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-time">2:00</div>
+      <h3>You decide what happens next</h3>
+      <p>Keep the answer and act on it yourself. Or let Finclare track it automatically from here. Entirely your call.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CALC CTA -->
+<section class="calc-section" id="calculator">
+  <div class="calc-inner">
+    <div class="section-eyebrow sapphire reveal" style="justify-content:center">READY WHEN YOU ARE</div>
+    <h2 class="section-title reveal" style="margin:0 auto;text-align:center">Stop guessing what it's costing you.</h2>
+
+    <div class="calc-card reveal-scale">
+      <div class="calc-icon">F</div>
+      <h3>Find Your Leak</h3>
+      <p>Free. Two minutes. Tell us how many properties you own, even just one, and we'll show you exactly where the money's going.</p>
+      <div class="calc-questions">
+        <span class="calc-tag">Properties owned</span><span class="calc-tag">Property type</span><span class="calc-tag">Ownership structure</span>
+        <span class="calc-tag">Annual income</span><span class="calc-tag">Residency</span>
+      </div>
+      <a href="finclare-mvp.html" class="btn-primary" onclick="gtag('event','cta_click',{'location':'calc_card'})" style="position:relative;z-index:1;">Find My Leak, Free</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="section">
+  <div class="section-eyebrow profit reveal">WHAT PEOPLE FOUND</div>
+  <h2 class="section-title reveal">The reaction is almost always the same.</h2>
+
+  <div class="proof-grid reveal">
+    <div class="proof-card">
+      <p class="proof-quote">"I genuinely thought I owed nothing. Turns out I was missing <span class="figure">AED 4,200</span> in deductions on a single apartment."</p>
+      <div class="proof-author"><div class="proof-avatar">RK</div><strong>R.K.</strong> — London, 1 property in Dubai Marina</div>
+    </div>
+    <div class="proof-card">
+      <p class="proof-quote">"My accountant never mentioned the VAT issue on my Airbnb unit. This caught it in two minutes flat."</p>
+      <div class="proof-author"><div class="proof-avatar">SH</div><strong>S.H.</strong> — Dubai resident, 2 short-term rentals</div>
+    </div>
+    <div class="proof-card">
+      <p class="proof-quote">"More clarity in one sitting than a full year of emails back and forth with my accountant."</p>
+      <div class="proof-author"><div class="proof-avatar">AJ</div><strong>A.J.</strong> — Abu Dhabi, 4-unit portfolio</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="waitlist">
+  <h2 class="reveal">The leak doesn't stop<br>just because you <span class="grad">looked away.</span></h2>
+  <p class="reveal">Two minutes. Free. Built specifically for how UAE property tax actually works in 2026.</p>
+  <a href="finclare-mvp.html" class="btn-primary reveal" onclick="gtag('event','cta_click',{'location':'final_cta'})">Find My Leak, Free</a>
+</section>
+
+<footer>
+  <div class="footer-brand">Finclare</div>
+  <div class="footer-copy">© 2026 Finclare. Built for UAE property investors.</div>
+</footer>
+
+<script>
+function animateCounter(el, target, duration) {
+  const startTime = performance.now();
+  function tick(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target).toLocaleString();
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const counter = document.getElementById('heroCounter');
+  if (counter) setTimeout(() => animateCounter(counter, 11400, 2000), 700);
+
+  setTimeout(() => {
+    document.querySelectorAll('.lm-bar-fill').forEach(bar => {
+      bar.style.width = bar.getAttribute('data-width') + '%';
+    });
+  }, 900);
+});
+
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+const reveals = document.querySelectorAll('.reveal, .reveal-scale');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 50);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// Timeline active step on scroll
+const howSteps = document.querySelectorAll('.how-step');
+const howObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('active');
+  });
+}, { threshold: 0.5 });
+howSteps.forEach(el => howObserver.observe(el));
+</script>
+</body>
+</html>
